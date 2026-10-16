@@ -5,6 +5,7 @@ import { useBusiness } from '@/hooks/useBusiness';
 import { format } from 'date-fns';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { Menu, X, LogOut, Plus, Edit2, Trash2, Building2, ChevronDown } from 'lucide-react';
+import { GoogleSheetsSync } from '@/components/GoogleSheetsSync';
 
 export function Dashboard() {
   const { user, signOut } = useAuth();
@@ -89,7 +90,7 @@ export function Dashboard() {
             </div>
 
             <nav className="space-y-2">
-              {['overview', 'customers', 'products', 'sales', 'expenses', 'audit'].map((tab) => (
+              {['overview', 'customers', 'products', 'sales', 'expenses', 'audit', 'sync'].map((tab) => (
                 <button key={tab} onClick={() => setActiveTab(tab)} className={`w-full px-3 py-2 rounded text-left text-sm font-medium ${activeTab === tab ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-muted'}`}>
                   {tab.charAt(0).toUpperCase() + tab.slice(1)}
                 </button>
@@ -201,6 +202,14 @@ export function Dashboard() {
                 </tbody>
               </table>
             </div>
+          )}
+
+          {activeTab === 'sync' && (
+            <GoogleSheetsSync
+              businessId={currentBusiness.id}
+              canWrite={canAccess('write')}
+              onDataSynced={loadData}
+            />
           )}
         </div>
       </main>
